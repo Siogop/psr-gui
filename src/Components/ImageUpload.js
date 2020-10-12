@@ -27,32 +27,38 @@ export default class ImageUpload extends React.Component {
   }
 
   handleUpload = (e) => {
-      let file = this.uploadInput.files[0];
-      // Split the filename to get the name and type
-      let fileParts = this.uploadInput.files[0].name.split('.');
-      let fileName = fileParts[0];
-      let fileType = fileParts[1];
-      console.log("Image: ", file)
-      console.log("Preparing the upload");
-      var options = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-      }
+    let file = this.uploadInput.files[0];    
 
-      axios.post("https://51hwwblj75.execute-api.eu-west-1.amazonaws.com/dev/gettext",{
-        imageBase64: this.state.base64TextString,
-        fileName: fileName,
-        extension: fileType
-      }, options)
-      .then(response => {
-        console.log(response);
-        this.setState({text: response.data})
-      })
-      .catch(error => {
-        console.log(JSON.stringify(error));
-      })
+    if (!file) {
+      alert('Select file')
+      return
     }
+    this.setState({text: 'Loading...'})
+    // Split the filename to get the name and type
+    let fileParts = this.uploadInput.files[0].name.split('.');
+    let fileName = fileParts[0];
+    let fileType = fileParts[1];
+    console.log("Image: ", file)
+    console.log("Preparing the upload");
+    var options = {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    }
+
+    axios.post("https://51hwwblj75.execute-api.eu-west-1.amazonaws.com/dev/gettext",{
+      imageBase64: this.state.base64TextString,
+      fileName: fileName,
+      extension: fileType
+    }, options)
+    .then(response => {
+      console.log(response);
+      this.setState({text: response.data})
+    })
+    .catch(error => {
+      console.log(JSON.stringify(error));
+    })
+  }
 
     render() {
       const { text } = this.state
